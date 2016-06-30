@@ -1,22 +1,24 @@
 package com.crm.infrastructure.helpers.businessmodel.reflections;
 
 
+import java.lang.reflect.Field;
+
 public class FieldDescriptor {
 
-  private final String name;
+  private final Field field;
   private final Object object;
 
-  public FieldDescriptor(Object object, String name) {
-    this.name = name;
+  public FieldDescriptor(Object object, Field field) {
+    this.field = field;
     this.object = object;
   }
 
-  public static FieldDescriptor createDescriptor(Object object, String fieldName) {
-      return new FieldDescriptor(object, fieldName);
+  public static FieldDescriptor createDescriptor(Object object, Field field) {
+      return new FieldDescriptor(object, field);
   }
 
-  public String getName() {
-    return name;
+  public Field getField() {
+    return field;
   }
 
   public Object getObject() {

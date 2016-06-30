@@ -12,6 +12,10 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
+import static com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionMirrorUtils.getProperty;
+import static com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionMirrorUtils.getPropertyName;
+import static com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionUtils.setProperty;
+
 public class MirrorObject {
 
 
@@ -23,8 +27,9 @@ public class MirrorObject {
       Optional<Field> field = ReflectionUtils.getField(currentRootObject, root.getField(), Reference.class);
 
       if (field.isPresent()) {
-        Object object = ReflectionMirrorUtils.newInstanceByReference(field.get());
-        Node nextNode = Node.newNode(node.getBase(), object, root);
+        Object value = ReflectionMirrorUtils.newInstanceByReference(field.get());
+        setProperty(root.getObject(), root.getField(), value);
+        Node nextNode = Node.newNode(node.getBase(), value, root);
         mirror(nextNode);
       }
     } else {
@@ -32,8 +37,9 @@ public class MirrorObject {
       List<FieldDescriptor> children = ReflectionMirrorUtils.getReferenceFields(node.getBase());
 
       for (FieldDescriptor child: children) {
-        Object targetChild = ReflectionUtils.getProperty(node.getTarget(), child.getName());
-        Node nextNode = Node.newNode(child.getObject(), targetChild, Root.newRoot(node.getTarget(), child.getName()));
+        Object targetChild = getProperty(node.getTarget(), child.getField());
+        String propertyName = getPropertyName(node.getBase(), child.getField());
+        Node nextNode = Node.newNode(child.getObject(), targetChild, Root.newRoot(node.getTarget(), propertyName));
         mirror(nextNode);
       }
     }

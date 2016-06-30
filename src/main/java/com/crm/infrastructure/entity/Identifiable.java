@@ -12,7 +12,7 @@ import java.util.Set;
 @MappedSuperclass
 public abstract class Identifiable implements Persistable<Long>, Serializable {
 
-	private static final long serialVersionUID = 8213025865912695435L;
+	//private static final long serialVersionUID = 8213025865912695435L;
 
 
     @Transient

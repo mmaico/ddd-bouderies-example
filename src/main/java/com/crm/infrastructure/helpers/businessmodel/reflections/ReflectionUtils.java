@@ -38,7 +38,7 @@ public class ReflectionUtils {
         .matching(field ->
             withAnnotations.stream()
                 .filter(ann -> field.getAnnotation(ann) != null).count() > 0)
-        .stream().map(field -> createDescriptor(getProperty(base, field), field.getName()))
+        .stream().map(field -> createDescriptor(getProperty(base, field), field))
         .collect(Collectors.toList());
   }
 
@@ -72,8 +72,12 @@ public class ReflectionUtils {
   }
 
   public static void setProperty(Object target, Field field, Object value) {
+    setProperty(target, field.getName(), value);
+  }
+
+  public static void setProperty(Object target, String fieldName, Object value) {
     try {
-      BeanUtils.setProperty(target, field.getName(), value);
+      BeanUtils.setProperty(target, fieldName, value);
     } catch (IllegalAccessException e) {
       e.printStackTrace();
     } catch (InvocationTargetException e) {
