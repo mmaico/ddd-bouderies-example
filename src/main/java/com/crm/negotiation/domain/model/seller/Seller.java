@@ -3,12 +3,15 @@ package com.crm.negotiation.domain.model.seller;
 
 import com.crm.infrastructure.configuration.ServiceLocator;
 import com.crm.infrastructure.entity.Identifiable;
+import com.crm.infrastructure.entity.User;
+import com.crm.infrastructure.helpers.businessmodel.annotations.Reference;
 import com.crm.negotiation.infrastructure.exceptions.RoleRequiredException;
 import com.google.common.collect.Lists;
 
 import java.util.List;
 import java.util.Optional;
 
+@Reference(User.class)
 public class Seller extends Identifiable {
 
   private Long id;
@@ -45,5 +48,13 @@ public class Seller extends Identifiable {
 
   public Boolean hasRole(RoleType type) {
     return roles.stream().filter(role -> role.getTypes().contains(type)).count() > 0;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("Negotiation Seller {");
+    sb.append("id=").append(getId());
+    sb.append('}');
+    return sb.toString();
   }
 }

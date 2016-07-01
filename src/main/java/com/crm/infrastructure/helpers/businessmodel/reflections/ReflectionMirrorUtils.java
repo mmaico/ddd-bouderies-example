@@ -3,10 +3,10 @@ package com.crm.infrastructure.helpers.businessmodel.reflections;
 
 import com.crm.infrastructure.helpers.businessmodel.annotations.Reference;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Optional;
 
 import static com.crm.infrastructure.helpers.businessmodel.AnnotationsIgnoredOnCopy.IGNORED_ON_COPY;
 import static org.apache.commons.lang.StringUtils.isBlank;
@@ -17,24 +17,29 @@ public class ReflectionMirrorUtils {
   public static void mergePrimitiveProperties(Object base, Object target) {
     List<Field> fields = ReflectionUtils.getFields(base, IGNORED_ON_COPY.getAnn());
     fields.stream()
-          .forEach(field -> ReflectionUtils.setProperty(target, field, ReflectionUtils.getProperty(base, field)));
+          .forEach(field -> ReflectionUtils.invokeSetter(target, field, ReflectionUtils.invokeGetter(base, field)));
   }
 
   public static List<FieldDescriptor> getReferenceFields(Object base) {
     return ReflectionUtils.getValues(base, Lists.newArrayList(Reference.class));
   }
 
-  public static Object newInstanceByReference(Field field) {
-    Class clazzReferenced = field.getAnnotation(Reference.class).value();
-    return ReflectionUtils.newInstance(clazzReferenced);
+  public static Object newInstanceByReference(Object origin) {
+    Optional<Reference> annotation = Optional.ofNullable(origin.getClass().getAnnotation(Reference.class));
+
+    if (annotation.isPresent()) {
+      return ReflectionUtils.newInstance(annotation.get().value());
+    }
+
+    return null;
   }
 
-  public static Object getProperty(Object object, Field field) {
+  public static Object invokeGetter(Object object, Field field) {
     Reference annotation = field.getAnnotation(Reference.class);
     if (isBlank(annotation.fieldName())) {
-      return ReflectionUtils.getProperty(object, field.getName());
+      return ReflectionUtils.invokeGetter(object, field.getName());
     } else {
-      return ReflectionUtils.getProperty(object, annotation.fieldName());
+      return ReflectionUtils.invokeGetter(object, annotation.fieldName());
     }
   }
 

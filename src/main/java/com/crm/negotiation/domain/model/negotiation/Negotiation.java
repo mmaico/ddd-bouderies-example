@@ -27,8 +27,8 @@ public class Negotiation extends Identifiable {
   @Reference(value = Person.class, fieldName = "client")
   private Customer customer;
 
-//  @Reference(ProposalSaleableItem.class)
-//  private List<NegotiationItem> items;
+  @Reference(value = ProposalSaleableItem.class, fieldName = "saleableItems")
+  private List<NegotiationItem> items;
 
   @CustomType
   private NegotiationStatus status;
@@ -58,13 +58,13 @@ public class Negotiation extends Identifiable {
     this.customer = customer;
   }
 
-//  public List<NegotiationItem> getItems() {
-//    return items;
-//  }
-//
-//  public void setItems(List<NegotiationItem> items) {
-//    this.items = items;
-//  }
+  public List<NegotiationItem> getItems() {
+    return items;
+  }
+
+  public void setItems(List<NegotiationItem> items) {
+    this.items = items;
+  }
 
   public NegotiationStatus getStatus() {
     return status;

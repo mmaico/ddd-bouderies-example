@@ -3,9 +3,9 @@ package com.crm.timeline.infrastructure;
 import com.crm.infrastructure.entity.timeline.items.BusinessProposalApprovalActivity;
 import com.crm.infrastructure.entity.timeline.items.LogActivity;
 import com.crm.infrastructure.exceptions.ValidationException;
-import br.com.kproj.salesman.timeline.view.dto.BusinessProposalApprovalActivityVO;
-import br.com.kproj.salesman.timeline.view.dto.LogActivityVO;
+
 import com.google.common.collect.Sets;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -62,7 +62,7 @@ public class TimelineActivitiesValidator implements Validator, InitializingBean 
 
         @Override
         public boolean supports(Class<?> clazz) {
-            return LogActivityVO.class.equals(clazz);
+            return Boolean.FALSE;
         }
 
         @Override
@@ -85,7 +85,7 @@ public class TimelineActivitiesValidator implements Validator, InitializingBean 
 
         @Override
         public boolean supports(Class<?> clazz) {
-            return BusinessProposalApprovalActivityVO.class.equals(clazz);
+            return Boolean.FALSE;
         }
 
         @Override

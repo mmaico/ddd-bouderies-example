@@ -1,14 +1,11 @@
 package com.crm.negotiation.infrastructure.persistence;
 
 
-
 import com.crm.infrastructure.entity.proposal.BusinessProposal;
 import com.crm.infrastructure.helpers.businessmodel.BusinessModel;
-import com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionMirrorUtils;
 import com.crm.negotiation.domain.model.customer.Customer;
 import com.crm.negotiation.domain.model.negotiation.Negotiation;
 import com.crm.negotiation.domain.model.seller.Seller;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -29,7 +26,7 @@ public class TestCopyBean {
     customer.setId(2l);
 
     Seller seller = new Seller();
-    seller.setId(2l);
+    seller.setId(3l);
 
     negotiation.setCustomer(customer);
     negotiation.setSeller(seller);
@@ -39,6 +36,7 @@ public class TestCopyBean {
 
     assertThat(businessProposal.getId(), Matchers.is(1l));
     assertThat(businessProposal.getClient().getId(), Matchers.is(2l));
+    assertThat(businessProposal.getSeller().getId(), Matchers.is(3l));
 
   }
 }
