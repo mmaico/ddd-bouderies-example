@@ -5,8 +5,10 @@ import com.crm.infrastructure.helpers.businessmodel.node.Root;
 import com.crm.infrastructure.helpers.businessmodel.node.TreeMirrorNode;
 import com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionUtils;
 
+import java.util.Optional;
+
 import static com.crm.infrastructure.helpers.businessmodel.node.OriginNode.newOrigin;
-import static com.crm.infrastructure.helpers.businessmodel.node.TargetNode.newTarget;
+import static com.crm.infrastructure.helpers.businessmodel.node.DestinationNode.newDestNode;
 
 public class BusinessModel {
 
@@ -23,7 +25,8 @@ public class BusinessModel {
   public <T> T convertTo(Class<T> clazz) {
     Object target = ReflectionUtils.newInstance(clazz);
 
-    TreeMirrorNode initialTreeMirrorNode = TreeMirrorNode.newNode(newOrigin(object, null), newTarget(target), Root.newRoot(null, null));
+    TreeMirrorNode initialTreeMirrorNode = TreeMirrorNode.newOrigNode(newOrigin(object, null), newDestNode(target,
+        Optional.empty()), Root.newRoot(null, null));
 
     new MirrorObject().mirror(initialTreeMirrorNode);
 

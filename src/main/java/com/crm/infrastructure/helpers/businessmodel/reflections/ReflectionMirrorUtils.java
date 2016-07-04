@@ -14,13 +14,13 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 public class ReflectionMirrorUtils {
 
 
-  public static void mergePrimitiveProperties(Object base, Object target) {
+  public static void mergePrimitiveAttributes(Object base, Object target) {
     List<Field> fields = ReflectionUtils.getFields(base, IGNORED_ON_COPY.getAnn());
     fields.stream()
           .forEach(field -> ReflectionUtils.invokeSetter(target, field, ReflectionUtils.invokeGetter(base, field)));
   }
 
-  public static List<FieldDescriptor> getReferenceFields(Object base) {
+  public static List<ChildNode> getReferenceFields(Object base) {
     return ReflectionUtils.getValues(base, Lists.newArrayList(Reference.class));
   }
 
@@ -43,7 +43,20 @@ public class ReflectionMirrorUtils {
     }
   }
 
-  public static String getPropertyName(Object target, Field field) {
+  public static Optional<Field> getDestField(Object objectDest, Field fieldOrigin) {
+    Reference annotation = fieldOrigin.getAnnotation(Reference.class);
+    if (objectDest == null) {
+      return Optional.empty();
+    }
+
+    if (isBlank(annotation.fieldName())) {
+      return ReflectionUtils.getField(objectDest, fieldOrigin.getName());
+    } else {
+      return ReflectionUtils.getField(objectDest, annotation.fieldName());
+    }
+  }
+
+  public static String getPropertyName(Field field) {
     Reference annotation = field.getAnnotation(Reference.class);
     if (isBlank(annotation.fieldName())) {
       return field.getName();

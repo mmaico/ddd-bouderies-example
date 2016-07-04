@@ -4,6 +4,8 @@ package com.crm.infrastructure.helpers.businessmodel.node;
 import com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionMirrorUtils;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionMirrorUtils.getPropertyName;
@@ -18,13 +20,17 @@ public class OriginNode {
         this.origin = origin;
     }
 
-    public String getAttributeNameToTarget() {
+    public String getAttributeNameToDestination() {
 
-        return getPropertyName(origin, field);
+        return getPropertyName(field);
     }
 
-    public Optional<Object> generateNewInstanceTarget() {
+    public Optional<Object> generateNewInstanceDestination() {
         return Optional.ofNullable(ReflectionMirrorUtils.newInstanceByReference(origin));
+    }
+
+    public boolean isClassCollection() {
+        return  field != null  && (Collection.class.isAssignableFrom(field.getType()) || Map.class.isAssignableFrom(field.getType()));
     }
 
     public Object getObject() {
@@ -37,5 +43,9 @@ public class OriginNode {
 
     public static OriginNode newOrigin(Object object, Field field) {
         return new OriginNode(field, object);
+    }
+
+    public boolean isNull() {
+        return getObject() == null;
     }
 }

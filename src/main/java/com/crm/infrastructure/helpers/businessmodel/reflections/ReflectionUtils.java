@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.crm.infrastructure.helpers.businessmodel.reflections.FieldDescriptor.createDescriptor;
+import static com.crm.infrastructure.helpers.businessmodel.reflections.ChildNode.createDescriptor;
 
 
 public class ReflectionUtils {
@@ -35,7 +35,14 @@ public class ReflectionUtils {
                 .stream().findFirst();
     }
 
-    public static List<FieldDescriptor> getValues(Object base, List<Class> withAnnotations) {
+    public static Optional<Field> getField(Object base, String fieldName) {
+        return new Mirror().on(base.getClass())
+            .reflectAll().fields()
+            .matching(field -> field.getName().equals(fieldName))
+            .stream().findFirst();
+    }
+
+    public static List<ChildNode> getValues(Object base, List<Class> withAnnotations) {
 
         return new Mirror().on(base.getClass())
                 .reflectAll().fields()
