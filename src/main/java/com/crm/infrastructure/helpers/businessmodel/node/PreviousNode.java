@@ -23,4 +23,8 @@ public class PreviousNode {
   public String getField() {
     return field;
   }
+
+  public Boolean isNull() {
+    return root == null;
+  }
 }

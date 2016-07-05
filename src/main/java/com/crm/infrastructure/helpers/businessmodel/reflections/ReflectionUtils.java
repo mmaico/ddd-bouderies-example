@@ -1,6 +1,7 @@
 package com.crm.infrastructure.helpers.businessmodel.reflections;
 
 
+import com.crm.infrastructure.helpers.businessmodel.reflections.registers.PrimitiveTypeFields;
 import net.vidageek.mirror.dsl.Mirror;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -19,12 +20,10 @@ public class ReflectionUtils {
 
     private static final String GETTER_PREFIX = "get";
 
-    public static List<Field> getFields(Object base, List<Class> ignoreFieldsWithAnn) {
+    public static List<Field> getFields(Object base) {
         return new Mirror().on(base.getClass())
                 .reflectAll().fields()
-                .matching(field ->
-                        ignoreFieldsWithAnn.stream()
-                                .filter(ann -> field.getAnnotation(ann) != null).count() == 0);
+                .matching(field -> PrimitiveTypeFields.getInstance().contains(field.getType()));
 
     }
 

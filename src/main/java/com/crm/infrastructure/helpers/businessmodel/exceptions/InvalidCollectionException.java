@@ -1,7 +1,7 @@
 package com.crm.infrastructure.helpers.businessmodel.exceptions;
 
+import com.crm.infrastructure.helpers.businessmodel.node.DestinationNode;
 import com.crm.infrastructure.helpers.businessmodel.node.OriginNode;
-import com.crm.infrastructure.helpers.businessmodel.node.PreviousNode;
 
 
 public class InvalidCollectionException extends RuntimeException {
@@ -18,18 +18,17 @@ public class InvalidCollectionException extends RuntimeException {
         + originNode.getField().getName() + "] on target [" + originNode.getField().getType() + "]");
   }
 
-  public InvalidCollectionException(OriginNode originNode, PreviousNode root) {
-    super("Could not find a collection on destination [ " + root.getObject() + " ]"
+  public InvalidCollectionException(OriginNode originNode, DestinationNode destinationNode) {
+    super("Could not find a collection on destination [ " + destinationNode.getPreviousNode().getObject() + " ]"
         + " calling destination method [ "  + originNode.getAttributeNameToDestination() + " ]");
   }
-
 
   public static void throwingError(OriginNode node) {
     new InvalidCollectionException(node);
   }
 
-  public static void throwingError(OriginNode originNode, PreviousNode root) {
-    new InvalidCollectionException(originNode, root);
+  public static void throwingError(OriginNode originNode, DestinationNode destinationNode) {
+    new InvalidCollectionException(originNode, destinationNode);
   }
 
 }

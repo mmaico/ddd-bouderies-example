@@ -1,6 +1,7 @@
 package com.crm.infrastructure.helpers.businessmodel.node;
 
 
+import com.crm.infrastructure.helpers.businessmodel.reflections.registers.CollectionsImplementationRegister;
 import com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -47,10 +48,23 @@ public class DestinationNode {
         return target != null;
     }
 
-    public Iterable generateNewCollection() {
-        List list = new ArrayList<>();
-        ReflectionUtils.invokeSetter(this.previousNode.getObject(), this.previousNode.getField(), list);
-        return list;
+    public Collection generateNewCollection() {
+
+        Optional<Field> field = ReflectionUtils.getField(this.previousNode.getObject(), previousNode.getField());
+        if (!field.isPresent()) {
+            throw new RuntimeException("Field not found on: [ " + this.previousNode.getObject() + " ] field [ " + previousNode.getField() + " ]");
+        }
+        Class<? extends Collection> collectionImpl =
+            CollectionsImplementationRegister.getInstance().getCollectionImpl(field.get().getType());
+
+        if (collectionImpl == null) {
+            throw new RuntimeException("Collection impl not found : [ " + this.previousNode.getObject() + " ] field [ " + previousNode.getField() + " ]");
+        }
+
+        Collection collection = (Collection) ReflectionUtils.newInstance(collectionImpl);
+
+        ReflectionUtils.invokeSetter(this.previousNode.getObject(), this.previousNode.getField(), collection);
+        return collection;
     }
 
 }

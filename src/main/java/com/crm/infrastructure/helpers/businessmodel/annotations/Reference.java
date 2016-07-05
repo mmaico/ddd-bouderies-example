@@ -2,6 +2,8 @@ package com.crm.infrastructure.helpers.businessmodel.annotations;
 
 
 
+import com.crm.infrastructure.helpers.businessmodel.converters.AttributeConverter;
+import com.crm.infrastructure.helpers.businessmodel.converters.NullObjectConverter;
 import org.apache.commons.lang.StringUtils;
 
 import java.lang.annotation.ElementType;
@@ -16,4 +18,6 @@ public @interface Reference {
   Class value();
 
   String fieldName() default StringUtils.EMPTY;
+
+  Class<? extends AttributeConverter> convert() default NullObjectConverter.class;
 }

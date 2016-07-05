@@ -30,7 +30,7 @@ public class Negotiation extends Identifiable {
   @Reference(value = ProposalSaleableItem.class, fieldName = "saleableItems")
   private List<NegotiationItem> items;
 
-  @CustomType
+
   private NegotiationStatus status;
 
 

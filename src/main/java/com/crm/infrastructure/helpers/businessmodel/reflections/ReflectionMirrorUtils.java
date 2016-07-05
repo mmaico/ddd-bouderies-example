@@ -8,14 +8,13 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
-import static com.crm.infrastructure.helpers.businessmodel.AnnotationsIgnoredOnCopy.IGNORED_ON_COPY;
 import static org.apache.commons.lang.StringUtils.isBlank;
 
 public class ReflectionMirrorUtils {
 
 
   public static void mergePrimitiveAttributes(Object base, Object target) {
-    List<Field> fields = ReflectionUtils.getFields(base, IGNORED_ON_COPY.getAnn());
+    List<Field> fields = ReflectionUtils.getFields(base);
     fields.stream()
           .forEach(field -> ReflectionUtils.invokeSetter(target, field, ReflectionUtils.invokeGetter(base, field)));
   }

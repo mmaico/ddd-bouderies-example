@@ -1,13 +1,16 @@
 package com.crm.infrastructure.helpers.businessmodel;
 
 
+import com.crm.infrastructure.helpers.businessmodel.annotations.Reference;
 import com.crm.infrastructure.helpers.businessmodel.exceptions.InvalidCollectionException;
 import com.crm.infrastructure.helpers.businessmodel.node.DestinationNode;
 import com.crm.infrastructure.helpers.businessmodel.node.OriginNode;
 import com.crm.infrastructure.helpers.businessmodel.node.PreviousNode;
 import com.crm.infrastructure.helpers.businessmodel.node.TreeMirrorNode;
+import com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionUtils;
 import com.google.common.collect.Iterables;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import static com.crm.infrastructure.helpers.businessmodel.node.DestinationNode.newDestNode;
@@ -23,31 +26,37 @@ public class MirrorCollection {
     }
 
     if (!destinationNode.isClassCollection()) {
-      //Ajustar mensagem da exception
-      InvalidCollectionException.throwingError(originNode);
+      InvalidCollectionException.throwingError(originNode, destinationNode);
     }
-    final Iterable destinationCollection;
+
+    final Collection destinationCollection;
 
     if (!destinationNode.collectionIsPresent()) {
         destinationCollection = destinationNode.generateNewCollection();
     } else {
-        destinationCollection = (Iterable) destinationNode.getObject();
+        destinationCollection = (Collection) destinationNode.getObject();
     }
 
-    Iterable originCollection = (Iterable) originNode.getObject();
+    Collection originCollection = (Collection) originNode.getObject();
 
     for (Object itemOrigin: originCollection) {
-      Object found = Iterables.find(destinationCollection, e -> e.equals(itemOrigin));
 
-      if (found != null) {
-        TreeMirrorNode initialTreeMirrorNode = TreeMirrorNode.newOrigNode(newOrigin(itemOrigin, null), newDestNode(found,
-                Optional.empty(), PreviousNode.newPreviousNode(null, null)));
+      com.google.common.base.Optional optional = Iterables.tryFind(destinationCollection, e -> e.equals(itemOrigin));
+      final Object found;
 
-        new MirrorObject().mirror(initialTreeMirrorNode);
-
+      if (!optional.isPresent()) {
+        Reference annotation = originNode.getField().getAnnotation(Reference.class);
+        found = ReflectionUtils.newInstance(annotation.value());
+        destinationCollection.add(found);
+      } else {
+        found = optional.get();
       }
-    }
 
+      TreeMirrorNode initialTreeMirrorNode = TreeMirrorNode.newOrigNode(newOrigin(itemOrigin, null),
+            newDestNode(found, Optional.empty(), PreviousNode.newPreviousNode(null, null)));
+
+      new MirrorObject().mirror(initialTreeMirrorNode);
+    }
 
   }
 
