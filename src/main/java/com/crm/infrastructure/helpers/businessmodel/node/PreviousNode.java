@@ -1,19 +1,19 @@
 package com.crm.infrastructure.helpers.businessmodel.node;
 
 
-public class Root {
+public class PreviousNode {
 
   private final Object root;
   private final String field;
 
 
-  public Root(Object root, String field) {
+  public PreviousNode(Object root, String field) {
     this.root = root;
     this.field = field;
   }
 
-  public static Root newRoot(Object root, String field) {
-    return new Root(root, field);
+  public static PreviousNode newPreviousNode(Object root, String field) {
+    return new PreviousNode(root, field);
   }
 
   public Object getObject() {

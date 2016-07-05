@@ -1,7 +1,7 @@
 package com.crm.infrastructure.helpers.businessmodel;
 
 
-import com.crm.infrastructure.helpers.businessmodel.node.Root;
+import com.crm.infrastructure.helpers.businessmodel.node.PreviousNode;
 import com.crm.infrastructure.helpers.businessmodel.node.TreeMirrorNode;
 import com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionUtils;
 
@@ -26,7 +26,7 @@ public class BusinessModel {
     Object target = ReflectionUtils.newInstance(clazz);
 
     TreeMirrorNode initialTreeMirrorNode = TreeMirrorNode.newOrigNode(newOrigin(object, null), newDestNode(target,
-        Optional.empty()), Root.newRoot(null, null));
+        Optional.empty(), PreviousNode.newPreviousNode(null, null)));
 
     new MirrorObject().mirror(initialTreeMirrorNode);
 

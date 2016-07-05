@@ -5,12 +5,11 @@ public class TreeMirrorNode {
 
   private final OriginNode origin;
   private final DestinationNode target;
-  private final Root currentRoot;
 
-  public TreeMirrorNode(OriginNode origin, DestinationNode target, Root root) {
+
+  public TreeMirrorNode(OriginNode origin, DestinationNode target) {
     this.origin = origin;
     this.target = target;
-    this.currentRoot = root;
   }
 
   public Boolean hasDestination() {
@@ -25,12 +24,12 @@ public class TreeMirrorNode {
     return target;
   }
 
-  public Root getRoot() {
-    return currentRoot;
+  public PreviousNode getPreviousNode() {
+    return target.getPreviousNode();
   }
 
-  public static TreeMirrorNode newOrigNode(OriginNode origin, DestinationNode target, Root root) {
-    return new TreeMirrorNode(origin, target, root);
+  public static TreeMirrorNode newOrigNode(OriginNode origin, DestinationNode target) {
+    return new TreeMirrorNode(origin, target);
   }
 
 }
