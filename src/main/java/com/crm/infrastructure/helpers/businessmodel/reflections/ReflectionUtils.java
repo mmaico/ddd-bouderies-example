@@ -1,6 +1,7 @@
 package com.crm.infrastructure.helpers.businessmodel.reflections;
 
 
+import com.crm.infrastructure.helpers.businessmodel.node.ChildNode;
 import com.crm.infrastructure.helpers.businessmodel.reflections.registers.PrimitiveTypeFields;
 import net.vidageek.mirror.dsl.Mirror;
 import org.apache.commons.beanutils.BeanUtils;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.crm.infrastructure.helpers.businessmodel.reflections.ChildNode.createDescriptor;
+import static com.crm.infrastructure.helpers.businessmodel.node.ChildNode.createDescriptor;
 
 
 public class ReflectionUtils {
@@ -56,6 +57,28 @@ public class ReflectionUtils {
         return invokeGetter(target, field.getName());
     }
 
+    public static Object invokeSafeGetter(Object target, Field field) {
+        return invokeSafeGetter(target, field.getName());
+    }
+
+    public static Object invokeSafeGetter(Object target, String name) {
+        String getterMethodName = name;
+        if (!name.startsWith(GETTER_PREFIX)) {
+            getterMethodName = GETTER_PREFIX + StringUtils.capitalize(name);
+        }
+        Method method = org.springframework.util.ReflectionUtils.findMethod(target.getClass(), getterMethodName);
+        if (method == null && !getterMethodName.equals(name)) {
+            getterMethodName = name;
+            method = org.springframework.util.ReflectionUtils.findMethod(target.getClass(), getterMethodName);
+        }
+
+        if (method == null) {
+            return target;
+        }
+
+        org.springframework.util.ReflectionUtils.makeAccessible(method);
+        return org.springframework.util.ReflectionUtils.invokeMethod(method, target);
+    }
 
     public static Object invokeGetter(Object target, String name) {
 

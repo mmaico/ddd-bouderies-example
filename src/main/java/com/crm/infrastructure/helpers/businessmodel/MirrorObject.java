@@ -5,7 +5,7 @@ import com.crm.infrastructure.helpers.businessmodel.node.DestinationNode;
 import com.crm.infrastructure.helpers.businessmodel.node.OriginNode;
 import com.crm.infrastructure.helpers.businessmodel.node.PreviousNode;
 import com.crm.infrastructure.helpers.businessmodel.node.TreeMirrorNode;
-import com.crm.infrastructure.helpers.businessmodel.reflections.ChildNode;
+import com.crm.infrastructure.helpers.businessmodel.node.ChildNode;
 import com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionMirrorUtils;
 import com.crm.infrastructure.helpers.businessmodel.reflections.ReflectionUtils;
 

@@ -1,7 +1,7 @@
 package com.crm.infrastructure.helpers.businessmodel;
 
 
-import com.crm.infrastructure.helpers.businessmodel.annotations.Reference;
+import com.crm.infrastructure.helpers.businessmodel.annotations.EntityReference;
 import com.crm.infrastructure.helpers.businessmodel.exceptions.InvalidCollectionException;
 import com.crm.infrastructure.helpers.businessmodel.node.DestinationNode;
 import com.crm.infrastructure.helpers.businessmodel.node.OriginNode;
@@ -45,7 +45,7 @@ public class MirrorCollection {
       final Object found;
 
       if (!optional.isPresent()) {
-        Reference annotation = originNode.getField().getAnnotation(Reference.class);
+        EntityReference annotation = originNode.getField().getAnnotation(EntityReference.class);
         found = ReflectionUtils.newInstance(annotation.value());
         destinationCollection.add(found);
       } else {

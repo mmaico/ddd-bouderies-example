@@ -1,4 +1,4 @@
-package com.crm.infrastructure.helpers.businessmodel.reflections;
+package com.crm.infrastructure.helpers.businessmodel.node;
 
 
 import java.lang.reflect.Field;

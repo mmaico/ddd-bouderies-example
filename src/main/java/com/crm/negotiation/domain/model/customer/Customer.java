@@ -2,9 +2,9 @@ package com.crm.negotiation.domain.model.customer;
 
 
 import com.crm.infrastructure.entity.person.Person;
-import com.crm.infrastructure.helpers.businessmodel.annotations.Reference;
+import com.crm.infrastructure.helpers.businessmodel.annotations.EntityReference;
 
-@Reference(Person.class)
+@EntityReference(Person.class)
 public class Customer {
 
     private Long id;

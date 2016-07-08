@@ -5,14 +5,13 @@ import com.crm.infrastructure.entity.User;
 import com.crm.infrastructure.entity.person.Person;
 import com.crm.infrastructure.entity.proposal.BusinessProposal;
 import com.crm.infrastructure.entity.proposal.ProposalSaleableItem;
-import com.crm.infrastructure.helpers.businessmodel.annotations.CustomType;
-import com.crm.infrastructure.helpers.businessmodel.annotations.Reference;
+import com.crm.infrastructure.helpers.businessmodel.annotations.EntityReference;
 import com.crm.negotiation.domain.model.customer.Customer;
 import com.crm.negotiation.domain.model.seller.Seller;
 
 import java.util.List;
 
-@Reference(BusinessProposal.class)
+@EntityReference(BusinessProposal.class)
 public class Negotiation extends Identifiable {
 
   private Long id;
@@ -21,13 +20,13 @@ public class Negotiation extends Identifiable {
 
   private String careOf;
 
-  @Reference(User.class)
+  @EntityReference(User.class)
   private Seller seller;
 
-  @Reference(value = Person.class, fieldName = "client")
+  @EntityReference(value = Person.class, fieldName = "client")
   private Customer customer;
 
-  @Reference(value = ProposalSaleableItem.class, fieldName = "saleableItems")
+  @EntityReference(value = ProposalSaleableItem.class, fieldName = "saleableItems")
   private List<NegotiationItem> items;
 
 

@@ -1,7 +1,8 @@
 package com.crm.infrastructure.helpers.businessmodel.reflections;
 
 
-import com.crm.infrastructure.helpers.businessmodel.annotations.Reference;
+import com.crm.infrastructure.helpers.businessmodel.annotations.EntityReference;
+import com.crm.infrastructure.helpers.businessmodel.node.ChildNode;
 import com.google.common.collect.Lists;
 
 import java.lang.reflect.Field;
@@ -16,15 +17,15 @@ public class ReflectionMirrorUtils {
   public static void mergePrimitiveAttributes(Object base, Object target) {
     List<Field> fields = ReflectionUtils.getFields(base);
     fields.stream()
-          .forEach(field -> ReflectionUtils.invokeSetter(target, field, ReflectionUtils.invokeGetter(base, field)));
+          .forEach(field -> ReflectionUtils.invokeSetter(target, field, ReflectionUtils.invokeSafeGetter(base, field)));
   }
 
   public static List<ChildNode> getReferenceFields(Object base) {
-    return ReflectionUtils.getValues(base, Lists.newArrayList(Reference.class));
+    return ReflectionUtils.getValues(base, Lists.newArrayList(EntityReference.class));
   }
 
   public static Object newInstanceByReference(Object origin) {
-    Optional<Reference> annotation = Optional.ofNullable(origin.getClass().getAnnotation(Reference.class));
+    Optional<EntityReference> annotation = Optional.ofNullable(origin.getClass().getAnnotation(EntityReference.class));
 
     if (annotation.isPresent()) {
       return ReflectionUtils.newInstance(annotation.get().value());
@@ -34,16 +35,16 @@ public class ReflectionMirrorUtils {
   }
 
   public static Object invokeGetter(Object object, Field field) {
-    Reference annotation = field.getAnnotation(Reference.class);
+    EntityReference annotation = field.getAnnotation(EntityReference.class);
     if (isBlank(annotation.fieldName())) {
-      return ReflectionUtils.invokeGetter(object, field.getName());
+      return ReflectionUtils.invokeSafeGetter(object, field.getName());
     } else {
-      return ReflectionUtils.invokeGetter(object, annotation.fieldName());
+      return ReflectionUtils.invokeSafeGetter(object, annotation.fieldName());
     }
   }
 
   public static Optional<Field> getDestField(Object objectDest, Field fieldOrigin) {
-    Reference annotation = fieldOrigin.getAnnotation(Reference.class);
+    EntityReference annotation = fieldOrigin.getAnnotation(EntityReference.class);
     if (objectDest == null) {
       return Optional.empty();
     }
@@ -56,7 +57,7 @@ public class ReflectionMirrorUtils {
   }
 
   public static String getPropertyName(Field field) {
-    Reference annotation = field.getAnnotation(Reference.class);
+    EntityReference annotation = field.getAnnotation(EntityReference.class);
     if (isBlank(annotation.fieldName())) {
       return field.getName();
     } else {
